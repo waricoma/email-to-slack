@@ -2,13 +2,15 @@
 
 import dotenv from 'dotenv';
 import notifier from 'mail-notifier';
-import { IncomingWebhook } from '@slack/webhook';
+import { WebClient } from '@slack/web-api';
+import fs from 'fs';
 import cheerio from 'cheerio';
+import moment from 'moment-timezone';
 
 dotenv.config();
 const ENV = process.env;
 
-const webhook = new IncomingWebhook(ENV.SLACK_WEBHOOK_URL);
+const client = new WebClient(ENV.SLACK_BOT_TOKEN);
 
 const imap = {
   user: ENV.USER,
@@ -63,9 +65,16 @@ const imap = {
       data += `\`\`\`${text}\`\`\``;
     }
 
-    await webhook.send({
-      text: data,
+    const time = moment(mail.date).tz(ENV.TIMEZONE).format();
+    const response = await client.files.upload({
+      channels: '#devneco',
+      title: time,
+      file: fs.createReadStream('Comingsoon.png'),
+      filename: `${time}.png`,
+      initial_comment: data,
     });
+    response
+    //console.log(response);
   });
 
   n.on('error', (error) => {
