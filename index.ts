@@ -1,6 +1,5 @@
 'use strict';
 
-import fs from 'fs-extra';
 import dotenv from 'dotenv';
 import notifier from 'mail-notifier';
 import { IncomingWebhook } from '@slack/webhook';
@@ -27,7 +26,6 @@ const imap = {
 
   n.on('mail', async (mail) => {
     console.log(`---mail---`);
-    fs.writeFileSync('mail.json', JSON.stringify(mail));
     let data = ' _new mail received_\n';
 
     for (const i of ['from', 'to', 'bcc', 'cc']) {
