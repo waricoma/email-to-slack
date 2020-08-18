@@ -6,6 +6,8 @@ import { WebClient } from '@slack/web-api';
 import fs from 'fs';
 import cheerio from 'cheerio';
 import moment from 'moment-timezone';
+import HTML5ToPDF from 'html5-to-pdf';
+import path from 'path';
 
 dotenv.config();
 const ENV = process.env;
@@ -27,6 +29,7 @@ const imap = {
   n.on('connected', () => console.log(`---connected---`));
 
   n.on('mail', async (mail) => {
+    //fs.writeFileSync('mail.json',JSON.stringify(mail))
     console.log(`---mail---`);
     let data = ' _new mail received_\n';
 
@@ -66,14 +69,34 @@ const imap = {
     }
 
     const time = moment(mail.date).tz(ENV.TIMEZONE).format();
+
+    let file;
+    let filename;
+    try {
+      const savePath = path.join(__dirname, `${new Date().getTime()}.pdf`);
+      const html5ToPDF = new HTML5ToPDF({
+        inputBody: mail.html,
+        outputPath: savePath,
+      });
+      await html5ToPDF.start();
+      await html5ToPDF.build();
+      await html5ToPDF.close();
+      file = fs.readFileSync(savePath);
+      fs.unlinkSync(savePath);
+      filename = `${time}.pdf`;
+    } catch {
+      file = fs.readFileSync('Comingsoon.png');
+      filename = 'commingsoon.png';
+    }
+
     const response = await client.files.upload({
       channels: '#devneco',
       title: time,
-      file: fs.createReadStream('Comingsoon.png'),
-      filename: `${time}.png`,
+      file,
+      filename,
       initial_comment: data,
     });
-    response
+    response;
     //console.log(response);
   });
 
