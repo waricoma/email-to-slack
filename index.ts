@@ -2,17 +2,14 @@
 
 import dotenv from 'dotenv';
 import notifier from 'mail-notifier';
-import { WebClient } from '@slack/web-api';
-import fs from 'fs';
+import { IncomingWebhook } from '@slack/webhook';
 import cheerio from 'cheerio';
-import moment from 'moment-timezone';
-import HTML5ToPDF from 'html5-to-pdf';
-import path from 'path';
+//import fs from 'fs';
 
 dotenv.config();
 const ENV = process.env;
 
-const client = new WebClient(ENV.SLACK_BOT_TOKEN);
+const webhook = new IncomingWebhook(ENV.SLACK_WEBHOOK_URL);
 
 const imap = {
   user: ENV.USER,
@@ -29,9 +26,9 @@ const imap = {
   n.on('connected', () => console.log(`---connected---`));
 
   n.on('mail', async (mail) => {
-    //fs.writeFileSync('mail.json',JSON.stringify(mail))
+    //fs.writeFileSync('mail.json', JSON.stringify(mail));
     console.log(`---mail---`);
-    let data = ' _new mail received_\n';
+    let data = `:email: ${mail.subject ? `*${mail.subject}*` : ''} \n`;
 
     for (const i of ['from', 'to', 'bcc', 'cc']) {
       let temp = '';
@@ -46,58 +43,45 @@ const imap = {
       }
     }
 
-    if (mail.subject) {
-      data += `*subject: ${mail.subject}* \n`;
-    }
-
     if (mail.date) {
-      data += `\`date: ${mail.date}\`\n`;
+      data += `:clock2: \`${mail.date}\`\n`;
     }
 
     let attachments = '';
     if (mail.attachments) {
       for (const i of mail.attachments) {
-        attachments += `${i.fileName} / `;
+        attachments += ` \`${i.fileName}\``;
       }
     }
     if (attachments != '') {
-      data += `\`attachments: ${attachments.replace(/ \/ $/, '')}\`\n`;
+      data += `:open_file_folder:${attachments}\n`;
     }
-    const text = cheerio.load(mail.html)('body').text();
+
+    const $ = cheerio.load(mail.html);
+
+    let linkList = '';
+    $('a').each((index, element) => {
+      const linkName = element.children[0].data;
+      const linkHref = element.attribs.href.replace(/\\"/g, '');
+      linkList += `> ${linkName && linkName != linkHref ? `${linkName}: ` : ''}${linkHref}\n`;
+    });
+    data += linkList === '' ? '' : `:link:\n${linkList}\n`;
+
+    let imgList = '';
+    $('img').each((index, element) => {
+      const src = element.attribs.src.replace(/\\"/g, '');
+      imgList += src.match(/^http/gi) ? `> ${src}\n` : '';
+    });
+    data += imgList === '' ? '' : `:frame_with_picture:\n${imgList}\n`;
+
+    const text = $('body').text();
     if (text != '\n') {
       data += `\`\`\`${text}\`\`\``;
     }
 
-    const time = moment(mail.date).tz(ENV.TIMEZONE).format();
-
-    let file;
-    let filename;
-    try {
-      const savePath = path.join(__dirname, `${new Date().getTime()}.pdf`);
-      const html5ToPDF = new HTML5ToPDF({
-        inputBody: mail.html,
-        outputPath: savePath,
-      });
-      await html5ToPDF.start();
-      await html5ToPDF.build();
-      await html5ToPDF.close();
-      file = fs.readFileSync(savePath);
-      fs.unlinkSync(savePath);
-      filename = `${time}.pdf`;
-    } catch {
-      file = fs.readFileSync('Comingsoon.png');
-      filename = 'commingsoon.png';
-    }
-
-    const response = await client.files.upload({
-      channels: '#devneco',
-      title: time,
-      file,
-      filename,
-      initial_comment: data,
+    await webhook.send({
+      text: data,
     });
-    response;
-    //console.log(response);
   });
 
   n.on('error', (error) => {
