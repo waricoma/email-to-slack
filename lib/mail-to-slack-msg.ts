@@ -20,6 +20,10 @@ export class MailToSlackMsg {
   private attachments: Attachment[];
   private $: CheerioStatic;
 
+  /**
+   * plz, set the options from email info for other methods.
+   * @param op plz, set the email info.
+   */
   constructor(op: {
     from?: Mail[];
     to?: Mail[];
@@ -39,6 +43,9 @@ export class MailToSlackMsg {
     this.$ = cheerio.load(op.html || '');
   }
 
+  /**
+   * You can customize slack msg format if you can rewrite this method.
+   */
   public get(): string {
     return [
       `:email: ${this.whenThereIsSubject()}`,
@@ -53,6 +60,9 @@ export class MailToSlackMsg {
       .join('\n');
   }
 
+  /**
+   * This method will get sender ( form ) and receiver ( to, cc ) information from email info.
+   */
   public getSenderAndReceiver(): string {
     return [
       { type: 'form', list: this.from },
@@ -70,6 +80,9 @@ export class MailToSlackMsg {
       .join('\n');
   }
 
+  /**
+   * This method will return the subject if there is the subject.
+   */
   public whenThereIsSubject(): string {
     if (!this.subject) {
       return '';
@@ -78,6 +91,9 @@ export class MailToSlackMsg {
     return `*${this.subject}*`;
   }
 
+  /**
+   * This method will return the date if there is the date.
+   */
   public whenThereIsDate(): string {
     if (!this.date) {
       return '';
@@ -86,6 +102,9 @@ export class MailToSlackMsg {
     return `:clock2: \`${this.date}\``;
   }
 
+  /**
+   * This method will return the attachment's file names if there is the attachments.
+   */
   public whenThereIsAttachments(): string {
     if (!this.attachments) {
       return '';
@@ -94,6 +113,9 @@ export class MailToSlackMsg {
     return `:open_file_folder: \`${this.attachments.map((_) => _.fileName).join('` `')}\``;
   }
 
+  /**
+   * This method will return the link-text and urls if there is the links in email.
+   */
   public getLinks(): string {
     const links = this.$('a')
       .map((i, elm): string => {
@@ -124,6 +146,10 @@ export class MailToSlackMsg {
     return `:link:\n${links.join('\n')}`;
   }
 
+  /**
+   * This method will return the img-alt and urls if there is the images in email.
+   * The image will be rejected if The protocol of image's url is not http / https.
+   */
   public getImgs(): string {
     const imgs = this.$('img')
       .map((i, elm): string => {
@@ -154,9 +180,15 @@ export class MailToSlackMsg {
     return `:frame_with_picture:\n${imgs.join('\n')}`;
   }
 
+  /**
+   * This method will return the email's contents.
+   */
   public getBody(): string {
     const bodyText = this.$('body').text();
 
+    /**
+     * The empty email's contents is empty but this may include enter-code when some time.
+     */
     if (bodyText === '\n') {
       return '';
     }
