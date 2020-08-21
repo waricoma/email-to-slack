@@ -29,7 +29,6 @@ n.on('mail', async (mail) => {
     text: new MailToSlackMsg({
       from: mail.from,
       to: mail.to,
-      bcc: mail.bcc,
       cc: mail.cc,
       subject: mail.subject,
       date: mail.date,

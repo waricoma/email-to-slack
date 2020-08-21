@@ -3,7 +3,7 @@
 import cheerio from 'cheerio';
 
 class Mail {
-  public name: string;
+  public name?: string;
   public address: string;
 }
 
@@ -27,7 +27,6 @@ export class MailToSlackMsg {
   constructor(op: {
     from?: Mail[];
     to?: Mail[];
-    bcc?: Mail[];
     cc?: Mail[];
     subject?: string;
     date?: string;
@@ -65,7 +64,7 @@ export class MailToSlackMsg {
    */
   public getSenderAndReceiver(): string {
     return [
-      { type: 'form', list: this.from },
+      { type: 'from', list: this.from },
       { type: 'to', list: this.to },
       { type: 'cc', list: this.cc },
     ]
@@ -74,7 +73,7 @@ export class MailToSlackMsg {
           return '';
         }
 
-        return `> ${mails.type} ${mails.list.map((mail) => `${mail.name} ${mail.address}`).join(' / ')}`;
+        return `> ${mails.type} ${mails.list.map((mail) => `${mail.name || ''} ${mail.address}`.trim()).join(' / ')}`;
       })
       .filter((_) => _ !== '')
       .join('\n');
