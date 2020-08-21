@@ -1,6 +1,3 @@
-orbs:
-  slack: circleci/slack@3.4.2
-
 # Javascript Node CircleCI 2.0 configuration file
 #
 # Check https://circleci.com/docs/2.0/language-javascript/ for more details
@@ -30,6 +27,14 @@ jobs:
             # fallback to using the latest cache if no exact match is found
             - v1-dependencies-
 
+      - run:
+          command: |
+            curl $SLACK_WEBHOOK \
+            -s \
+            -X POST \
+            -H "Content-Type: application/json" \
+            -d "{ \"text\": \":arrow_forward: https://circleci.com/gh/${CIRCLE_USERNAME}/${CIRCLE_BRANCH}\n> COVERAGE: *$(curl https://codecov.io/gh/${CIRCLE_USERNAME}/${CIRCLE_BRANCH}/branch/master/graph/badge.txt)%* https://codecov.io/gh/${CIRCLE_USERNAME}/${CIRCLE_BRANCH}\n> STATUS: https://circleci.com/gh/${CIRCLE_USERNAME}/${CIRCLE_BRANCH}.png?r=$(cat /dev/urandom | base64 | fold -w 10 | head -n 1)\" }"
+
       - run: yarn install
 
       - save_cache:
@@ -43,11 +48,12 @@ jobs:
 
       - run: npx codecov
 
-      - run: curl -s -L https://gist.githubusercontent.com/u-minor/8cb27fa9c04163142ebd/raw/circleci-coverage-slack | bash -s
-
       - run: yarn run build
 
-      - slack/status:
-          success_message: ':ok: Branch: $CIRCLE_BRANCH\n:github: User: $CIRCLE_USERNAME'
-          failure_message: ':no_good: $CIRCLE_BRANCH\n:github: User: $CIRCLE_USERNAME'
-          webhook: '${SLACK_WEBHOOK}'
+      - run:
+          command: |
+            curl $SLACK_WEBHOOK \
+            -s \
+            -X POST \
+            -H "Content-Type: application/json" \
+            -d "{ \"text\": \":tada: https://circleci.com/gh/${CIRCLE_USERNAME}/${CIRCLE_BRANCH}\n> COVERAGE: *$(curl https://codecov.io/gh/${CIRCLE_USERNAME}/${CIRCLE_BRANCH}/branch/master/graph/badge.txt)%* https://codecov.io/gh/${CIRCLE_USERNAME}/${CIRCLE_BRANCH}\n> STATUS: https://circleci.com/gh/${CIRCLE_USERNAME}/${CIRCLE_BRANCH}.png?r=$(cat /dev/urandom | base64 | fold -w 10 | head -n 1)\" }"

@@ -6,6 +6,8 @@
 [![Maintenance](https://img.shields.io/badge/Maintained%3F-yes-green.svg)](https://github.com/waricoma/email-to-slack/graphs/commit-activity)
 [![License: MIT](https://img.shields.io/github/license/waricoma/email-to-slack)](https://github.com/waricoma/email-to-slack/blob/master/LICENSE)
 [![Twitter: waritocomatta](https://img.shields.io/twitter/follow/waritocomatta.svg?style=social)](https://twitter.com/waritocomatta)
+[![CircleCI](https://circleci.com/gh/waricoma/email-to-slack.svg?style=svg)](https://circleci.com/gh/waricoma/email-to-slack)
+[![codecov](https://codecov.io/gh/waricoma/email-to-slack/branch/master/graph/badge.svg)](https://codecov.io/gh/waricoma/email-to-slack)
 
 > This system will post the message of email's contents to slack when the target email box received new email.
 
