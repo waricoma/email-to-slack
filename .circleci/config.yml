@@ -38,4 +38,8 @@ jobs:
 
       - run: yarn run test
 
+      - run: npx codecov
+
+      - run: curl -s -L https://gist.githubusercontent.com/u-minor/8cb27fa9c04163142ebd/raw/circleci-coverage-slack | bash -s
+
       - run: yarn run build
