@@ -23,7 +23,7 @@
     "commit": "git cz",
     "lint": "tsc --noEmit && eslint ./*.{js,ts,tsx} ./lib/*.ts ./__tests__/*.test.ts --config ./.eslintrc.js --no-ignore --cache --color --fix",
     "ignore": "curl https://raw.githubusercontent.com/github/gitignore/master/Node.gitignore -o ./.gitignore",
-    "document": "typedoc --plugin typedoc-plugin-markdown --out ./docs/ ./*.ts"
+    "document": "typedoc --plugin typedoc-plugin-markdown --out ./docs/ ./*.ts && license-checker --json > ./licenses.json"
   },
   "keywords": [
     "Slack",
@@ -70,6 +70,7 @@
     "eslint-plugin-prettier": "3.1.4",
     "husky": "4.2.5",
     "jest": "26.4.1",
+    "license-checker": "^25.0.1",
     "prettier": "2.0.5",
     "readme-md-generator": "1.0.0",
     "shelljs": "0.8.4",

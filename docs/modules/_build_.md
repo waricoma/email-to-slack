@@ -14,4 +14,4 @@
 
 • **outDir**: *string* = config.compilerOptions.outDir
 
-*Defined in [build.ts:5](https://github.com/waricoma/email-to-slack/blob/44ab67a/build.ts#L5)*
+*Defined in [build.ts:5](https://github.com/waricoma/email-to-slack/blob/3c24576/build.ts#L5)*

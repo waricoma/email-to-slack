@@ -16,7 +16,7 @@
 
 • **ENV**: *ProcessEnv‹›* = process.env
 
-*Defined in [index.ts:10](https://github.com/waricoma/email-to-slack/blob/44ab67a/index.ts#L10)*
+*Defined in [index.ts:10](https://github.com/waricoma/email-to-slack/blob/3c24576/index.ts#L10)*
 
 ___
 
@@ -31,7 +31,7 @@ ___
   tlsOptions: { rejectUnauthorized: false },
 })
 
-*Defined in [index.ts:14](https://github.com/waricoma/email-to-slack/blob/44ab67a/index.ts#L14)*
+*Defined in [index.ts:14](https://github.com/waricoma/email-to-slack/blob/3c24576/index.ts#L14)*
 
 ___
 
@@ -39,4 +39,4 @@ ___
 
 • **webhook**: *IncomingWebhook‹›* = new IncomingWebhook(ENV.SLACK_WEBHOOK_URL)
 
-*Defined in [index.ts:12](https://github.com/waricoma/email-to-slack/blob/44ab67a/index.ts#L12)*
+*Defined in [index.ts:12](https://github.com/waricoma/email-to-slack/blob/3c24576/index.ts#L12)*

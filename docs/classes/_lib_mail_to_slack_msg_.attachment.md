@@ -18,4 +18,4 @@
 
 • **fileName**: *string*
 
-*Defined in [lib/mail-to-slack-msg.ts:11](https://github.com/waricoma/email-to-slack/blob/44ab67a/lib/mail-to-slack-msg.ts#L11)*
+*Defined in [lib/mail-to-slack-msg.ts:11](https://github.com/waricoma/email-to-slack/blob/3c24576/lib/mail-to-slack-msg.ts#L11)*
