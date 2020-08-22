@@ -14,7 +14,7 @@
     "url": "git+https://github.com/waricoma/email-to-slack.git"
   },
   "scripts": {
-    "start": "yarn run build && node ./dist/index.js",
+    "start": "node ./dist/index.js",
     "quick": "ts-node ./index.ts",
     "build": "ts-node ./build.ts && tsc --lib es2020",
     "readme": "npx readme-md-generator",
