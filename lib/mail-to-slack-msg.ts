@@ -183,12 +183,12 @@ export class MailToSlackMsg {
    * This method will return the email's contents.
    */
   public getBody(): string {
-    const bodyText = this.$('body').text();
+    const bodyText = this.$('body').text().trim();
 
     /**
      * The empty email's contents is empty but this may include enter-code when some time.
      */
-    if (bodyText === '\n') {
+    if (bodyText === '') {
       return '';
     }
 
