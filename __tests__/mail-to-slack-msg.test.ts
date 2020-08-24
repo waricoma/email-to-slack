@@ -48,6 +48,28 @@ test('if set the Attachments, "whenThereIsAttachments" will return it.', () => {
   expect(mailToSlackMsg.whenThereIsAttachments()).toBe(':open_file_folder: `hoge.txt` `fuga.jpg`');
 });
 
+test('if set the Links, "getLinks" will return it.', () => {
+  const html =
+    '<a href="https://hoge.com">hoge</a> <a href="fuga.com">fuga.com</a> <a href="http://foo.com"></a><a>link text</a>';
+  const mailToSlackMsg = new MailToSlackMsg({ html });
+
+  expect(mailToSlackMsg.getLinks()).toBe(`:link:\n> hoge https://hoge.com\n> fuga.com\n> http://foo.com\n> link text`);
+});
+
+test('if set the imgs, "getImgs" will return it.', () => {
+  const html = '<img alt="hoge" src="http://hoge.jpg"> <img src="https://fuga.jpg"> <img alt="foo"> <img>';
+  const mailToSlackMsg = new MailToSlackMsg({ html });
+
+  expect(mailToSlackMsg.getImgs()).toBe(':frame_with_picture:\n> hoge http://hoge.jpg\n> https://fuga.jpg');
+});
+
+test('if set the body, "getBody" will return it.', () => {
+  const html = '<body>hoge<br>hoge</body>';
+  const mailToSlackMsg = new MailToSlackMsg({ html });
+
+  expect(mailToSlackMsg.getBody()).toBe('```hoge\nhoge```');
+});
+
 test('if did not set all parameters, "get" will return it.', () => {
   const mailToSlackMsg = new MailToSlackMsg({});
 

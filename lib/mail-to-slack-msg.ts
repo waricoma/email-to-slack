@@ -133,6 +133,10 @@ export class MailToSlackMsg {
           return `> ${linkHref}`;
         }
 
+        if (linkName === '' || linkHref === '') {
+          return `> ${linkName}${linkHref}`;
+        }
+
         return `> ${linkName} ${linkHref}`;
       })
       .get()
@@ -163,7 +167,7 @@ export class MailToSlackMsg {
           return '';
         }
 
-        if (imgName === imgSrc) {
+        if (imgName === imgSrc || imgName === '') {
           return `> ${imgSrc}`;
         }
 
@@ -183,7 +187,7 @@ export class MailToSlackMsg {
    * This method will return the email's contents.
    */
   public getBody(): string {
-    const bodyText = this.$('body').text().trim();
+    const bodyText = cheerio.load(this.$('body').html().replace(/<br>/gi, '\n'))('body').text().trim();
 
     /**
      * The empty email's contents is empty but this may include enter-code when some time.
