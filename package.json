@@ -14,6 +14,7 @@
     "url": "git+https://github.com/waricoma/email-to-slack.git"
   },
   "scripts": {
+    "preinstall": "npx only-allow yarn",
     "start": "node ./dist/index.js",
     "quick": "ts-node ./index.ts",
     "build": "ts-node ./build.ts && tsc --lib es2020",
@@ -71,6 +72,7 @@
     "husky": "4.2.5",
     "jest": "26.4.2",
     "license-checker": "25.0.1",
+    "only-allow": "^1.0.0",
     "prettier": "2.1.1",
     "readme-md-generator": "1.0.0",
     "shelljs": "0.8.4",
