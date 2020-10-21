@@ -62,7 +62,7 @@
     "@typescript-eslint/parser": "4.4.0",
     "add-text-to-markdown": "2.0.0",
     "codecov": "3.8.0",
-    "commitizen": "4.2.1",
+    "commitizen": "4.2.2",
     "cz-emoji": "1.2.2",
     "eslint": "7.11.0",
     "eslint-config-prettier": "6.13.0",
